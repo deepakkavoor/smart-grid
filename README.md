@@ -1,2 +1,3 @@
 # smart-grid
-Course project for Software Engineering
+Implementing basic point arithmetic in elliptic curves.
+Implementing Paillier and elliptic ElGamal.

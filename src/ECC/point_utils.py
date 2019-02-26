@@ -127,8 +127,8 @@ def encrypt(Pm, P_public, Base):
 def decrypt(cipher, privateKey, Base):
     [C, D] = cipher
 
-    C_prime = pointMultiply(C, privateKey)
-    Pm = pointSubtract(D, C_prime)
+    C_ = pointMultiply(C, privateKey)
+    Pm = pointSubtract(D, C_)
 
     return Pm
 
@@ -144,22 +144,19 @@ if __name__ == "__main__":
         36134250956749795798585127919587881956611106672985015071877198253568414405109,
     )
 
-    Base = Point(
-        48439561293906451759052585252797914202762949526041747995844080717082404635286,
-        36134250956749795798585127919587881956611106672985015071877198253568414405109,
-        curve=P256
-    )
+    Base = P256.G()
 
-    privateKey = 100
+    privateKey = random.randint(1, P256.P - 1)
     P_public = pointMultiply(Base, privateKey)
     
     for _ in range(10):
-        message = random.randint(0, 10e5)
+        message = random.randint(10e50, 10e60)
         Pm = Point(message, P256.evaluate(message), P256)
         cipher = encrypt(Pm, P_public, Base)
         new_Pm = decrypt(cipher, privateKey, Base)
 
         print(Pm.getX() == new_Pm.getX() and Pm.getY() == new_Pm.getY())
+        print(Pm, new_Pm)
 
     
 
