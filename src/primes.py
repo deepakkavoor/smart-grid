@@ -1,4 +1,4 @@
-# https://github.com/mikeivanov/paillier
+# Implementation taken from https://github.com/mikeivanov/paillier
 
 import random
 import sys

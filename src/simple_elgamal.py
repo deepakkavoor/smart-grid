@@ -1,5 +1,3 @@
-# https://github.com/RyanRiddle/elgamal/blob/master/elgamal.py
-
 import random
 import math
 import time
