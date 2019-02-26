@@ -2,6 +2,7 @@
 
 import random
 import math
+import time
 
 class PrivateKey:
     def __init__(self, p = None, g = None, x = None, iNumBits = 0):
@@ -151,14 +152,28 @@ def decrypt(key, cipher_pair):
     return message
 
 
-def test():
+def test(a, b):
+    start = time.time()
+
     keys = generateKeys()
-    message = random.randint(0, 10e5)
+    message = random.randint(a, b)
     cipher = encrypt(keys['publicKey'], message)
+    end = time.time()
+
+    diff1 = end - start
+    start = time.time()
     plain = decrypt(keys['privateKey'], cipher)
 
-    print(message == plain)
+    if message != plain:
+        print("Error")
+        return
+
+    end = time.time()
+    diff2 = end - start
+
+    print("Time for encryption: {}  Time for decryption: {}".format(diff1, diff2))
+    
 
 if __name__ == '__main__':
     for _ in range(10):
-        test()
+        test(10e5, 10e10)

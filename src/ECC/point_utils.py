@@ -1,6 +1,7 @@
 from point import Point
 from curve import Curve
 import random
+import time
 
 class CurveMismatchError(Exception):
     def __init__(self, curve1, curve2):
@@ -146,17 +147,32 @@ if __name__ == "__main__":
 
     Base = P256.G()
 
-    privateKey = random.randint(1, P256.P - 1)
-    P_public = pointMultiply(Base, privateKey)
+    # privateKey = random.randint(1, P256.P - 1)
+    # P_public = pointMultiply(Base, privateKey)
     
     for _ in range(10):
+        start = time.time()
+
+        privateKey = random.randint(1, P256.P - 1)
+        P_public = pointMultiply(Base, privateKey)
+        
         message = random.randint(10e50, 10e60)
         Pm = Point(message, P256.evaluate(message), P256)
         cipher = encrypt(Pm, P_public, Base)
+
+        end = time.time()
+        diff1 = end - start
+
+        start = time.time()
         new_Pm = decrypt(cipher, privateKey, Base)
+        
+        end = time.time()
+        diff2 = end - start
+
+        print("Time for encryption: {}  Time for decryption: {}".format(diff1, diff2))
 
         print(Pm.getX() == new_Pm.getX() and Pm.getY() == new_Pm.getY())
-        print(Pm, new_Pm)
+        # print(Pm, new_Pm)
 
     
 
