@@ -17,7 +17,13 @@ class Point:
     def setY(self, Y):
         self.Y = Y
 
+    def getCoordinates(self):
+        return (self.X, self.Y)
+
     def __str__(self):
+        return "X: " + str(self.X) + "  " + "Y: " + str(self.Y)
+
+    def __repr__(self):
         return "X: " + str(self.X) + "  " + "Y: " + str(self.Y)
 
     def isEqual(self, P):

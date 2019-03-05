@@ -92,23 +92,47 @@ def decrypt(priv, pub, cipher):
     plain = ((x // pub.n) * priv.m) % pub.n
     return plain
 
+def demo():
+    print("Generating keypair...")
+    priv, pub = generate_keypair(512)
 
-if __name__ == "__main__":
-    # priv, pub = generate_keypair(512)
-    
     for _ in range(10):
         start = time.time()
 
-        priv, pub = generate_keypair(512)
-        message = random.randint(10e3, 10e4)
-        cipher = encrypt(pub, message)
-        end = time.time()
-        diff1 = end - start
+        x = random.randint(0, 1000)
+        cx = encrypt(pub, x)
 
-        start = time.time()
-        decoded = decrypt(priv, pub, cipher)
-        end = time.time()
-        diff2 = end - start
+        y = random.randint(0, 1000)
+        cy = encrypt(pub, y)
 
-        print("Time for encryption: {}  Time for decryption: {}".format(diff1, diff2))
-        assert message == decoded
+        cz = e_add(pub, cx, cy)
+
+        z = decrypt(priv, pub, cz)
+
+        print("x, y, z ", x, y, z)
+        assert z == x + y
+
+        end = time.time()
+
+        print("Time taken: ", end - start)
+
+if __name__ == "__main__":
+    # priv, pub = generate_keypair(512)
+    demo()
+    
+    # for _ in range(10):
+    #     start = time.time()
+
+    #     priv, pub = generate_keypair(512)
+    #     message = random.randint(10e3, 10e4)
+    #     cipher = encrypt(pub, message)
+    #     end = time.time()
+    #     diff1 = end - start
+
+    #     start = time.time()
+    #     decoded = decrypt(priv, pub, cipher)
+    #     end = time.time()
+    #     diff2 = end - start
+
+    #     print("Time for encryption: {}  Time for decryption: {}".format(diff1, diff2))
+    #     assert message == decoded
