@@ -1,4 +1,4 @@
-from point import Point
+from .point import Point
 
 class Curve:
     # https://github.com/AntonKueltz/fastecdsa/blob/master/fastecdsa/curve.self.Py

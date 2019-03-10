@@ -3,10 +3,11 @@
 import socket
 import threading
 import random
+from paillier.paillier import *
 
 HOST = "127.0.0.1"
-PORT1 = 10000
-PORT2 = 10001
+PORT1 = 20002
+PORT2 = 20003
 
 numClients = 4
 
@@ -14,8 +15,18 @@ def threadFunc(address, threadID):
     with socket.socket() as s:
         s.connect(address)
         value = random.randint(0, 10)
-        s.sendall(str(value).encode())
+
         print("client {} sent {}".format(threadID + 1, value))
+
+        with open("server public key.txt", "r") as keyFile:
+            keys = keyFile.read().split("\n")
+            pubKey = [int(key) for key in keys]
+
+        #print("keys are {} and {}".format(keys[0], keys[1])) 
+
+        cipher =encrypt(pubKey, value)
+
+        s.sendall(str(cipher).encode())
 
 
 

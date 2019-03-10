@@ -1,5 +1,5 @@
-from point import Point
-from curve import Curve
+from .point import Point
+from .curve import Curve
 import random
 import time
 
