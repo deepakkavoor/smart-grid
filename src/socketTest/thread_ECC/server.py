@@ -3,20 +3,32 @@
 import socket
 import threading
 import sys
+import time
 sys.path.append('../../crypto/ECC/')
 from additive_point_utils import *
 
-numServers = 2
-clientsPerServer = 2
-numClients = numServers * clientsPerServer
-recData = [[] for _ in range(numServers)]
+
+numServers = 1
+numNodes = 10
+numClientsPerServer = 20
+
+PORTS = [20000 + i for i in range(numNodes)]
+
+numClients = numNodes * numClientsPerServer
+recData = [[] for _ in range(numNodes)]
+
+sentData = []
+timeSpentSending = []
+timeSpentReceiving = []
 
 HOST = "127.0.0.1"
-PORT1 = 10002
-PORT2 = 10003
+
 PORT_PARENT = 10005
 
 def threadFunc(addressParent, addressChild, threadID):
+
+    print("server started receiving")
+    start = time.time()
 
     with open("server public key.txt", "r") as keyFile:
             keys = keyFile.read().split("\n")
@@ -24,9 +36,9 @@ def threadFunc(addressParent, addressChild, threadID):
 
     with socket.socket() as s:
         s.bind(addressChild)
-        s.listen(5)
+        s.listen()
 
-        for _ in range(clientsPerServer):
+        for _ in range(numClientsPerServer):
             # print("server {} is listening".format(threadID + 1))
             conn, _ = s.accept()
             with conn:
@@ -45,14 +57,26 @@ def threadFunc(addressParent, addressChild, threadID):
                     recData[threadID].append([C, D])
 
         result_cipher = add_ciphertexts(recData[threadID][0], recData[threadID][1], P_public, Base)
+        
+        for i in range(2, len(recData[threadID])):
+            result_cipher = add_ciphertexts(result_cipher, recData[threadID][i], P_public, Base)
+
 
         value = random.randint(0, 10)
+        sentData.append(value)
         print("server {} sent {}".format(threadID + 1, value))
 
         server_cipher = additive_encrypt(value, P_public, Base)
 
         result_cipher = add_ciphertexts(result_cipher, server_cipher, P_public, Base)
-        
+
+
+        end = time.time()
+        print("finished receiving in ", end - start, " s")
+        timeSpentReceiving.append(end - start)
+
+        print("server started sending")
+        start = time.time()        
 
         with socket.socket() as s:
             s.connect(addressParent)
@@ -61,15 +85,25 @@ def threadFunc(addressParent, addressChild, threadID):
             print("server {} sent aggregate".format(threadID + 1))
 
 
+        end = time.time()
+        print("finished receiving in time ", end - start)
+        timeSpentSending.append(end - start)
+
+
 if __name__ == "__main__":
 
-    server1 = threading.Thread(target = threadFunc, args = ((HOST, PORT_PARENT), (HOST, PORT1), 0,))
-    server2 = threading.Thread(target = threadFunc, args = ((HOST, PORT_PARENT), (HOST, PORT2), 1,))
+    nodes = []
+    index = 0
 
-    server1.start()
-    server2.start()
+    for node in range(numNodes):
+        nodes.append(threading.Thread(target = threadFunc, args = ((HOST, PORT_PARENT), (HOST, PORTS[index]), index, )))
+        index += 1
 
-    server1.join()
-    server2.join()
+    for node in nodes:
+        node.start()
+
+    for node in nodes:
+        node.join()
 
     print("server work done")
+    print("sum of data sent by server = ", sum(sentData))

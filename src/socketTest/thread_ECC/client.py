@@ -9,15 +9,26 @@ sys.path.append('../../crypto/ECC/')
 from additive_point_utils import *
 
 HOST = "127.0.0.1"
-PORT1 = 10002
-PORT2 = 10003
 
-numClients = 4
+numClientPerServer = 20
+numServers = 10
+
+PORTS = [20000 + i for i in range(numServers)]
+
+numClients = numServers * numClientPerServer
+sentData = []
+timeSpent = []
 
 def threadFunc(address, threadID):
     with socket.socket() as s:
+
+        print("client started sending")
+        start = time.time()
+
+
         s.connect(address)
         value = random.randint(0, 10)
+        sentData.append(value)
 
         print("client {} sent {}".format(threadID + 1, value))
 
@@ -32,23 +43,27 @@ def threadFunc(address, threadID):
         s.sendall((  str(cipher[0].X) + "\n" + str(cipher[0].Y) + "\n" + 
             str(cipher[1].X) + "\n" + str(cipher[1].Y)  ).encode())
 
+        
+        end = time.time()
+        print("finished sending in time ", end - start)
+        timeSpent.append(end - start)
 
 
 if __name__ == "__main__":
-    client1 = threading.Thread(target = threadFunc, args = ((HOST, PORT1), 0,))
-    client2 = threading.Thread(target = threadFunc, args = ((HOST, PORT1), 1,))
 
-    client3 = threading.Thread(target = threadFunc, args = ((HOST, PORT2), 2,))
-    client4 = threading.Thread(target = threadFunc, args = ((HOST, PORT2), 3,))
+    clients = []
+    index = 0
 
-    client1.start()
-    client2.start()
-    client3.start()
-    client4.start()
+    for server in range(numServers):
+        for client in range(numClientPerServer):
+            clients.append(threading.Thread(target = threadFunc, args = ((HOST, PORTS[server]), index,)))
+            index += 1
 
-    client1.join()
-    client2.join()
-    client3.join()
-    client4.join()
+    for client in clients:
+        client.start()
+
+    for client in clients:
+        client.join()
 
     print("client work finished")
+    print("sum of data sent by client = ", sum(sentData))

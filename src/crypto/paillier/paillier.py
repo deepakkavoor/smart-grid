@@ -92,7 +92,8 @@ def e_add(pubKey, a, b):
 
     [n, n_sq, g] = pubKey
 
-    return a * b % n_sq
+    # return ((a % n_sq) * (b % n_sq)) % n_sq
+    return (a * b) % n_sq
 
 def e_add_const(pubKey, a, n):
     """Add constant n to an encrypted integer"""
@@ -121,6 +122,7 @@ def decrypt(privKey, pubKey, cipher):
 def demo():
     print("Generating keypair...")
     priv, pub = generate_keypair(256)
+    print(pub)
 
     for _ in range(10):
         start = time.time()

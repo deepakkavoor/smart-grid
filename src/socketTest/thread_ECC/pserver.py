@@ -6,17 +6,22 @@ sys.path.append('../../crypto/ECC/')
 from additive_point_utils import *
 
 HOST = "127.0.0.1"
-PORT = 10005
+PORT = 40005
+numClients = 10
 
 recData = []
+timeSpent = []
 
 table = compute_table(Base)
 
 def decrypt_data(P_public):
+    print("start decrypting aggregated data")
+    start = time.time()
+
     with socket.socket() as s:
         s.bind((HOST, PORT))
-        s.listen(10)
-        for _ in range(2):
+        s.listen()
+        for _ in range(numClients):
             print("parent server listening")
             conn, _ = s.accept()
             with conn:
@@ -36,8 +41,16 @@ def decrypt_data(P_public):
 
         result_cipher = add_ciphertexts(recData[0], recData[1], P_public, Base)
         
+        for i in range(2, len(recData)):
+            result_cipher = add_ciphertexts(result_cipher, recData[i], P_public, Base)
+        
+        
         result = additive_decrypt(result_cipher, privateKey, Base, table)
         print("parent server obtained sum ", result)
+
+        end = time.time()
+        print("finished in time ", end - start, " s")
+        timeSpent.append(end - start)
 
 
 if __name__ == "__main__":

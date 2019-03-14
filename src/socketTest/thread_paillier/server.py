@@ -5,18 +5,29 @@ import threading
 import sys
 sys.path.append('../../crypto/paillier/')
 from paillier import *
+import time
 
-numServers = 2
-clientsPerServer = 2
-numClients = numServers * clientsPerServer
-recData = [[] for _ in range(numServers)]
+numServers = 1
+numNodes = 5
+numClientsPerServer = 20
+
+PORTS = [30000 + i for i in range(numNodes)]
+
+numClients = numNodes * numClientsPerServer
+recData = [[] for _ in range(numNodes)]
+
+sentData = []
+timeSpentSending = []
+timeSpentReceiving = []
 
 HOST = "127.0.0.1"
-PORT1 = 20002
-PORT2 = 20003
-PORT_PARENT = 20005
+
+PORT_PARENT = 40004
 
 def threadFunc(addressParent, addressChild, threadID):
+
+    print("server started receiving")
+    start = time.time()
 
     with open("server public key.txt", "r") as keyFile:
             keys = keyFile.read().split("\n")
@@ -24,9 +35,9 @@ def threadFunc(addressParent, addressChild, threadID):
 
     with socket.socket() as s:
         s.bind(addressChild)
-        s.listen(5)
+        s.listen(21)
 
-        for _ in range(clientsPerServer):
+        for _ in range(numClientsPerServer):
             # print("server {} is listening".format(threadID + 1))
             conn, _ = s.accept()
             with conn:
@@ -41,16 +52,26 @@ def threadFunc(addressParent, addressChild, threadID):
                     recData[threadID].append(data)
 
         result_cipher = e_add(pubKey, recData[threadID][0], recData[threadID][1])
+        
+        for i in range(2, len(recData[threadID])):
+            result_cipher = e_add(pubKey, result_cipher, recData[threadID][i])
 
-        # result = decrypt(privKey, pubKey, result_cipher)
-        # print("server obtained sum ", result)
 
         value = random.randint(0, 10)
+        sentData.append(value)
         print("server {} sent {}".format(threadID + 1, value))
 
         server_cipher = encrypt(pubKey, value)
 
         result_cipher = e_add(pubKey, result_cipher, server_cipher)
+
+
+        end = time.time()
+        print("finished receiving in ", end - start, " s")
+        timeSpentReceiving.append(end - start)
+
+        print("server started sending")
+        start = time.time()  
         
 
         with socket.socket() as s:
@@ -59,21 +80,25 @@ def threadFunc(addressParent, addressChild, threadID):
             print("server {} sent aggregate".format(threadID + 1))
 
 
+        end = time.time()
+        print("finished receiving in time ", end - start)
+        timeSpentSending.append(end - start)
+
+
 if __name__ == "__main__":
 
-    # print("Generating keypair...")
-    # privKey, pubKey = generate_keypair(256)
+    nodes = []
+    index = 0
 
-    # with open("server public key.txt", "w") as keyFile:
-    #     keyFile.write(str(pubKey[0]) + "\n" + str(pubKey[1]) + "\n" + str(pubKey[2]))
+    for node in range(numNodes):
+        nodes.append(threading.Thread(target = threadFunc, args = ((HOST, PORT_PARENT), (HOST, PORTS[index]), index, )))
+        index += 1
 
-    server1 = threading.Thread(target = threadFunc, args = ((HOST, PORT_PARENT), (HOST, PORT1), 0,))
-    server2 = threading.Thread(target = threadFunc, args = ((HOST, PORT_PARENT), (HOST, PORT2), 1,))
+    for node in nodes:
+        node.start()
 
-    server1.start()
-    server2.start()
-
-    server1.join()
-    server2.join()
+    for node in nodes:
+        node.join()
 
     print("server work done")
+    print("sum of data sent by server = ", sum(sentData))
