@@ -1,7 +1,9 @@
 # parent server
 
 import socket
-from ECC.additive_point_utils import *
+import sys
+sys.path.append('../../crypto/ECC/')
+from additive_point_utils import *
 
 HOST = "127.0.0.1"
 PORT = 10005

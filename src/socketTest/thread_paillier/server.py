@@ -2,7 +2,9 @@
 
 import socket
 import threading
-from paillier.paillier import *
+import sys
+sys.path.append('../../crypto/paillier/')
+from paillier import *
 
 numServers = 2
 clientsPerServer = 2

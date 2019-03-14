@@ -3,7 +3,10 @@
 import socket
 import threading
 import random
-from ECC.additive_point_utils import *
+import sys
+import time
+sys.path.append('../../crypto/ECC/')
+from additive_point_utils import *
 
 HOST = "127.0.0.1"
 PORT1 = 10002

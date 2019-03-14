@@ -1,7 +1,7 @@
 # Implementation taken from https://github.com/mikeivanov/paillier
 
 import math
-import primes
+from primes import *
 import time
 import random
 import time
@@ -61,40 +61,66 @@ class PublicKey(object):
         return '<PublicKey: %s>' % self.n
 
 def generate_keypair(bits):
-    p = primes.generate_prime(bits // 2)
-    q = primes.generate_prime(bits // 2)
+    p = generate_prime(bits // 2)
+    q = generate_prime(bits // 2)
     n = p * q
-    return PrivateKey(p, q, n), PublicKey(n)
 
-def encrypt(pub, plain):
+    l = (p - 1) * (q - 1)
+    m = invmod(l, n)
+
+    privKey = [l, m]
+
+    n_sq = n * n
+    g = n + 1
+    pubKey = [n, n_sq, g]
+    return privKey, pubKey
+
+def encrypt(pubKey, plain):
+
+    [n, n_sq, g] = pubKey
+
     while True:
-        r = primes.generate_prime(round(math.log(pub.n, 2)))
-        if r > 0 and r < pub.n:
+        r = generate_prime(round(float(math.log(n, 2))))
+        if r > 0 and r < n:
             break
-    x = pow(r, pub.n, pub.n_sq)
-    cipher = (pow(pub.g, plain, pub.n_sq) * x) % pub.n_sq
+    x = pow(r, n, n_sq)
+    cipher = (pow(g, plain, n_sq) * x) % n_sq
     return cipher
 
-def e_add(pub, a, b):
+def e_add(pubKey, a, b):
     """Add one encrypted integer to another"""
-    return a * b % pub.n_sq
 
-def e_add_const(pub, a, n):
+    [n, n_sq, g] = pubKey
+
+    return a * b % n_sq
+
+def e_add_const(pubKey, a, n):
     """Add constant n to an encrypted integer"""
-    return a * modpow(pub.g, n, pub.n_sq) % pub.n_sq
 
-def e_mul_const(pub, a, n):
+    [n, n_sq, g] = pubKey
+
+    return a * modpow(g, n, n_sq) % n_sq
+
+def e_mul_const(pubKey, a, n):
     """Multiplies an ancrypted integer by a constant"""
-    return modpow(a, n, pub.n_sq)
 
-def decrypt(priv, pub, cipher):
-    x = pow(cipher, priv.l, pub.n_sq) - 1
-    plain = ((x // pub.n) * priv.m) % pub.n
+    [n, n_sq, g] = pubKey
+
+    return modpow(a, n, n_sq)
+
+def decrypt(privKey, pubKey, cipher):
+
+    [n, n_sq, g] = pubKey
+    [l, m] = privKey
+
+    x = pow(cipher, l, n_sq) - 1
+    plain = ((x // n) * m) % n
+
     return plain
 
 def demo():
     print("Generating keypair...")
-    priv, pub = generate_keypair(512)
+    priv, pub = generate_keypair(256)
 
     for _ in range(10):
         start = time.time()

@@ -3,7 +3,9 @@
 import socket
 import threading
 import random
-from paillier.paillier import *
+import sys
+sys.path.append('../../crypto/paillier/')
+from paillier import *
 
 HOST = "127.0.0.1"
 PORT1 = 20002

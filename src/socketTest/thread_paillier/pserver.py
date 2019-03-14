@@ -1,7 +1,9 @@
 # parent server
 
 import socket
-from paillier.paillier import *
+import sys
+sys.path.append('../../crypto/paillier/')
+from paillier import *
 
 HOST = "127.0.0.1"
 PORT = 20005

@@ -2,7 +2,9 @@
 
 import socket
 import threading
-from ECC.additive_point_utils import *
+import sys
+sys.path.append('../../crypto/ECC/')
+from additive_point_utils import *
 
 numServers = 2
 clientsPerServer = 2
