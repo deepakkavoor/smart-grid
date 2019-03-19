@@ -13,15 +13,15 @@ def additive_encrypt(message, P_public, Base):
 
     return cipher
 
-def compute_table(Base):
-    size = 2001
+def compute_table(Base, range1, range2):
+    
     start = time.time()
     table = {}
-    for i in range(0, size):
+    for i in range(range1, range2 + 1):
         table[pointMultiply(Base, i).getX()] = i
 
     end = time.time()
-    print("Time to build table of {} elements: ".format(size), end - start)
+    print("Time to build table of range {} to {} : ".format(range1, range2), end - start)
     return table
 
 def additive_decrypt(cipher, privateKey, Base, table):
@@ -62,7 +62,7 @@ Base = P256.G()
 
 if __name__ == "__main__":
     print("Computing table")
-    table = compute_table(Base)
+    table = compute_table(Base, 0, 3000)
     print("Finished table generation")
 
     for _ in range(10):
