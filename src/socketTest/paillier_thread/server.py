@@ -10,8 +10,8 @@ import time
 mutex = threading.Lock()
 
 numServers = 1
-numNodes = 10
-numClientsPerServer = 1
+numNodes = 5
+numClientsPerServer = 5
 
 PORTS = [30000 + i for i in range(numNodes)]
 
@@ -121,10 +121,10 @@ if __name__ == "__main__":
     print("server work done")
     print("sum of data sent by server = ", sum(sentData))
 
-    print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
-    print("time spent reading key ", sum(timeSpentReadingKey) / len(timeSpentReadingKey))
-    print("time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))
-    print("time spent encrypting ", sum(timeSpentEncrypting) / len(timeSpentEncrypting))
-    print("time spent sending ", sum(timeSpentSending) / len(timeSpentSending))
-    print("time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
-    print("length of message ", sum(cipherLength) / len(cipherLength))
+    print("t1 time spent reading key ", sum(timeSpentReadingKey) / len(timeSpentReadingKey))
+    print("t2 time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
+    print("t3 time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))
+    print("t4 time spent encrypting ", sum(timeSpentEncrypting) / len(timeSpentEncrypting))
+    print("t5 time spent sending ", sum(timeSpentSending) / len(timeSpentSending))
+    print("t6 time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
+    print("l length of message ", sum(cipherLength) / len(cipherLength))

@@ -2,7 +2,16 @@
 
 Ongoing project on homomorphic schemes. 
 
+### Status:
 
-Implementing basic point arithmetic in elliptic curves.
+#### Completed:
 
-Implementing Paillier and elliptic ElGamal.
+- Implementing basic point arithmetic in elliptic curves.
+
+- Implementing Paillier and elliptic ElGamal.
+
+- Using sockets and threads to simulate smart grid network
+
+#### Ongoing
+
+- Generate simulation results using mosaik-python-API

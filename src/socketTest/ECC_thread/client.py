@@ -12,10 +12,10 @@ HOST = "127.0.0.1"
 
 mutex = threading.Lock()
 
-numClientPerServer = 1
+numClientPerServer = 5
 numServers = 5
 
-PORTS = [20000 + i for i in range(numServers)]
+PORTS = [50000 + i for i in range(numServers)]
 
 numClients = numServers * numClientPerServer
 sentData = []
@@ -85,8 +85,8 @@ if __name__ == "__main__":
     print("client work finished")
     print("sum of data sent by client = ", sum(sentData))
 
-    print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
-    print("time spent reading key ", sum(timeSpentReadingKey) / len(timeSpentReadingKey))
-    print("time spent encrypting ", sum(timeSpentEncrypting) / len(timeSpentEncrypting))
-    print("time spent sending ", sum(timeSpentSending) / len(timeSpentSending))
-    print("length of message ", sum(cipherLength) / len(cipherLength))
+    # print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
+    # print("time spent reading key ", sum(timeSpentReadingKey) / len(timeSpentReadingKey))
+    # print("time spent encrypting ", sum(timeSpentEncrypting) / len(timeSpentEncrypting))
+    # print("time spent sending ", sum(timeSpentSending) / len(timeSpentSending))
+    # print("length of message ", sum(cipherLength) / len(cipherLength))

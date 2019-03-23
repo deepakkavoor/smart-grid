@@ -8,7 +8,7 @@ import time
 
 HOST = "127.0.0.1"
 PORT = 40004
-numClients = 10
+numClients = 5
 
 recData = []
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     print("Generating keypair...")
 
     start5 = time.clock()
-    privKey, pubKey = generate_keypair(256)
+    privKey, pubKey = generate_keypair(512)
     end5 = time.clock()
 
 
@@ -74,8 +74,8 @@ if __name__ == "__main__":
 
     decrypt_data(pubKey)
 
-    print("time spent generating key ", end5 - start5)
-    print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
-    print("time spent decrypting ", sum(timeSpentDecrypting) / len(timeSpentDecrypting))
-    print("time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
-    print("time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))
+    print("t8 time spent generating key ", end5 - start5)
+    # print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
+    print("t9 time spent decrypting ", sum(timeSpentDecrypting) / len(timeSpentDecrypting))
+    # print("time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
+    # print("time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))

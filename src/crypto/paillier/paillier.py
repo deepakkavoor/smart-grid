@@ -1,5 +1,3 @@
-# Implementation taken from https://github.com/mikeivanov/paillier
-
 import math
 from primes import *
 import time
@@ -7,10 +5,7 @@ import random
 import time
 
 def invmod(a, p, maxiter=1000000):
-    """The multiplicitive inverse of a in the integers modulo p:
-         a * b == 1 mod p
-       Returns b.
-       (http://code.activestate.com/recipes/576737-inverse-modulo-p/)"""
+    
     if a == 0:
         raise ValueError('0 has no inverse mod %d' % p)
     r = a
@@ -25,10 +20,7 @@ def invmod(a, p, maxiter=1000000):
     return d
 
 def modpow(base, exponent, modulus):
-    """Modular exponent:
-         c = b ^ e mod m
-       Returns c.
-       (http://www.programmish.com/?p=34)"""
+    
     result = 1
     while exponent > 0:
         if exponent & 1 == 1:
@@ -37,28 +29,6 @@ def modpow(base, exponent, modulus):
         base = (base * base) % modulus
     return result
 
-class PrivateKey(object):
-
-    def __init__(self, p, q, n):
-        self.l = (p-1) * (q-1)
-        self.m = invmod(self.l, n)
-
-    def __repr__(self):
-        return '<PrivateKey: %s %s>' % (self.l, self.m)
-
-class PublicKey(object):
-
-    @classmethod
-    def from_n(cls, n):
-        return cls(n)
-
-    def __init__(self, n):
-        self.n = n
-        self.n_sq = n * n
-        self.g = n + 1
-
-    def __repr__(self):
-        return '<PublicKey: %s>' % self.n
 
 def generate_keypair(bits):
     p = generate_prime(bits // 2)
@@ -88,7 +58,6 @@ def encrypt(pubKey, plain):
     return cipher
 
 def e_add(pubKey, a, b):
-    """Add one encrypted integer to another"""
 
     [n, n_sq, g] = pubKey
 
@@ -96,14 +65,12 @@ def e_add(pubKey, a, b):
     return (a * b) % n_sq
 
 def e_add_const(pubKey, a, n):
-    """Add constant n to an encrypted integer"""
 
     [n, n_sq, g] = pubKey
 
     return a * modpow(g, n, n_sq) % n_sq
 
 def e_mul_const(pubKey, a, n):
-    """Multiplies an ancrypted integer by a constant"""
 
     [n, n_sq, g] = pubKey
 

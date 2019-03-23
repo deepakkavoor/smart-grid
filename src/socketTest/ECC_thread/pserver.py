@@ -17,7 +17,7 @@ timeSpentReceiving = []
 timeSpentAggregating = []
 timeSpentDecrypting = []
 
-table = compute_table(Base, 0, 10000)
+table = compute_table(Base, 0, 30000)
 
 def decrypt_data(P_public):
     print("start decrypting aggregated data")
@@ -80,8 +80,14 @@ if __name__ == "__main__":
 
     decrypt_data(P_public)
 
-    print("time spent generating key ", end5 - start5)
-    print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
-    print("time spent decrypting ", sum(timeSpentDecrypting) / len(timeSpentDecrypting))
-    print("time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
-    print("time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))
+    # print("time spent generating key ", end5 - start5)
+    # print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
+    # print("time spent decrypting ", sum(timeSpentDecrypting) / len(timeSpentDecrypting))
+    # print("time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
+    # print("time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))
+
+    print("t8 time spent generating key ", end5 - start5)
+    # print("time spent total ", sum(timeSpentTotal) / len(timeSpentTotal))
+    print("t9 time spent decrypting ", sum(timeSpentDecrypting) / len(timeSpentDecrypting))
+    # print("time spent receiving ", sum(timeSpentReceiving) / len(timeSpentReceiving))
+    # print("time spent aggregating ", sum(timeSpentAggregating) / len(timeSpentAggregating))
