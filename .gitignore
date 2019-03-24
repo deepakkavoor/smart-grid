@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -111,3 +112,7 @@ venv.bak/
 
 # tox temporary artifacts
 /mosaik-*.*.*/
+=======
+*.pyc
+*/.vscode
+>>>>>>> 5627a7d68c159a78ee820d95106571a8e6087c6e
