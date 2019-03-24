@@ -10,7 +10,6 @@ sys.path.append("../crypto")
 from ECC.additive_point_utils import *
 import mosaik_api
 
-
 with open("server public key.txt", "r") as keyFile:
     keys = keyFile.read().split("\n")
     P_public = Point(X = int(keys[0]), Y = int(keys[1]), curve = P256)

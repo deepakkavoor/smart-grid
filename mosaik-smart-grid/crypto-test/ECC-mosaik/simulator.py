@@ -8,6 +8,7 @@ import sys
 sys.path.append("../../mosaik")
 sys.path.append("../crypto")
 from ECC.additive_point_utils import *
+import mosaik_api as mosaik
 
 with open("server public key.txt", "r") as keyFile:
             keys = keyFile.read().split("\n")
