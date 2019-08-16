@@ -12,6 +12,4 @@ Ongoing project on homomorphic schemes.
 
 - Using sockets and threads to simulate smart grid network
 
-#### Ongoing
-
 - Generate simulation results using mosaik-python-API
