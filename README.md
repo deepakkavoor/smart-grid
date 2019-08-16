@@ -1,6 +1,7 @@
 # smart-grid
 
-Ongoing project on homomorphic schemes. 
+A simulation of homomorphic data aggregation in smart grids. 
+
 
 ### Status:
 
@@ -12,4 +13,4 @@ Ongoing project on homomorphic schemes.
 
 - Using sockets and threads to simulate smart grid network
 
-- Generate simulation results using mosaik-python-API
+- Generate simulation results using Mosaik co-simulator.
